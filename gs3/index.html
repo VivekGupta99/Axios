@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Details Form</title>
+  </head>
+  <body>
+    <form id="userForm">
+      <label for="Name">Name:</label>
+      <input type="text" id="userName" />
+      <input type="email" id="userEmail" placeholder="Email" />
+      <input type="tel" id="userPhone" placeholder="Phone Number" />
+      <button type="submit">Submit</button>
+    </form>
+
+    <h3>Saved Details:</h3>
+    <ul id="userList"></ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+    <script>
+      document.getElementById("userForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Get user details from form
+        let name = document.getElementById("userName").value;
+        let email = document.getElementById("userEmail").value;
+        let phone = document.getElementById("userPhone").value;
+
+        // Create user object
+        let user = {
+          name: name,
+          email: email,
+          phone: phone,
+        };
+
+        // Save to localStorage
+        axios
+          .post(
+            "https://crudcrud.com/api/4e71102bd39f40a3816265de176fd64a/appointmentData",
+            user
+          )
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        // to get details from axios
+        axios
+          .get(
+            "https://crudcrud.com/api/4e71102bd39f40a3816265de176fd64a/appointmentData/64e2088b4c636203e876d408",
+            user
+          )
+          .then((res) => console.log(res.data))
+          .catch((err) => console.log(err));
+
+        // Display on sccreen
+        // let userList = document.getElementById("userList");
+        // let li = document.createElement("li");
+        // li.innerHTML = `<strong>Name:</strong> ${user.name},
+        // <strong>Email:</strong> ${user.email},
+        // <strong>Phone:</strong> ${user.phone}
+        // `;
+        // delete button
+        let delButton = document.createElement("button");
+        delButton.className = "deleteButton";
+        delButton.appendChild(document.createTextNode("Delete")); // append textnode containing word "Delete"
+        li.appendChild(delButton);
+        userList.appendChild(li);
+
+        //   edit button
+        let editButton = document.createElement("button");
+        editButton.className = "editButton";
+        editButton.appendChild(document.createTextNode("Edit"));
+        li.appendChild(editButton);
+        userList.appendChild(li);
+
+        //deleting
+        delButton.addEventListener("click", (e) => {
+          localStorage.removeItem(`${email}`);
+          userList.removeChild(li);
+        });
+
+        // Doing editing
+        editButton.addEventListener("click", (e) => {
+          // Retrieve user details from localStorage
+          let storedUser = JSON.parse(localStorage.getItem(`${email}`));
+
+          // Populate the form fields for editing
+          document.getElementById("userName").value = storedUser.name;
+          document.getElementById("userEmail").value = storedUser.email;
+          document.getElementById("userPhone").value = storedUser.phone;
+
+          // Remove user from localStorage and list
+          localStorage.removeItem(`${email}`);
+          // userList.removeChild(li);
+        });
+      });
+    </script>
+  </body>
+</html>
